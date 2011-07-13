@@ -1,0 +1,11 @@
+name: Moar
+main: com.hexbit.moar.Moar
+version: 0.1
+
+commands:
+    moar:
+        description: Gives the player more of the specified 
+        usage: /moar <block name> <#amount>
+    m:
+        description: Tops off the current block stack in the players hand
+        usage: /m
