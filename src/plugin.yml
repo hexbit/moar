@@ -4,8 +4,11 @@ version: 0.1
 
 commands:
     moar:
-        description: Gives the player more of the specified 
-        usage: /moar <block name> <#amount>
+        description: Gives the player more of the currently held block
+        usage: /moar <amount>
+    moar:
+        description: Gives the player more of the specified block
+        usage: /moar <id> <amount>
     m:
-        description: Tops off the current block stack in the players hand
+        description: Tops off the currently held stack
         usage: /m
