@@ -23,7 +23,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public enum ItemType {
-	DIAMOND_PICKAXE(278, "Diamond Pickaxe", "diamondpickaxe", "dpickaxe", "diamondpick", "dpick");
+	IRON_SHOVEL(256, "Iron Shovel", "ironshovel", "ishovel"),
+	IRON_PICKAXE(257, "Iron Pickaxe", "ironpickaxe", "ipickaxe", "ironpick", "ipick"),
+	IRON_AXE(258, "Iron Axe", "ironaxe", "iaxe"),
+	FLINT_AND_STEEL(259, "Flint and Steel", "flint", "lighter", "flightandsteel", "flintsteel"),
+	APPLE(260, "Apple", "apple"),
+	BOW(261, "Bow", "bow", "arrowlauncher"),
+	ARROW(262, "Arrow", "arrow", "bowammo"),
+	COAL(263, "Coal", "coal"),
+	WOODEN_PICKAXE(270, "Wooden Pickaxe", "woodenpickaxe", "woodpickaxe", "woodpick"),
+	STONE_PICKAXE(274, "Stone Pickaxe", "stonepickaxe", "spickaxe", "stonepick", "spick"),
+	DIAMOND_PICKAXE(278, "Diamond Pickaxe", "diamondpickaxe", "dpickaxe", "diamondpick", "dpick"),
+	GOLD_PICKAXE(285, "Gold Pickaxe", "goldpickaxe", "gpickaxe", "goldpick", "gpick");
 
 	/**
      * Construct the type.
