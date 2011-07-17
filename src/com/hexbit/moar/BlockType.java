@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.EnumSet;
 import java.util.Map.Entry;
+import com.hexbit.moar.StringUtil;
 
 public enum BlockType {
     AIR(0, "Air", "air"),
@@ -309,7 +310,7 @@ public enum BlockType {
                 continue;
             }
             
-            int dist = getLevenshteinDistance(entry.getKey(), testName);
+            int dist = StringUtil.getLevenshteinDistance(entry.getKey(), testName);
             
             if ((dist < minDist || minDist == -1) && dist < 2) {
                 minDist = dist;
@@ -587,75 +588,4 @@ public enum BlockType {
         return dropped;
     }
     
-    /*
-     * Licensed to the Apache Software Foundation (ASF) under one or more
-     * contributor license agreements.  See the NOTICE file distributed with
-     * this work for additional information regarding copyright ownership.
-     * The ASF licenses this file to You under the Apache License, Version 2.0
-     * (the "License"); you may not use this file except in compliance with
-     * the License.  You may obtain a copy of the License at
-     * 
-     *      http://www.apache.org/licenses/LICENSE-2.0
-     * 
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-
-    public static int getLevenshteinDistance(String s, String t) {
-        if (s == null || t == null) {
-            throw new IllegalArgumentException("Strings must not be null");
-        }
-
-        int n = s.length();
-        int m = t.length();
-
-        if (n == 0) {
-            return m;
-        } else if (m == 0) {
-            return n;
-        }
-
-        if (n > m) {
-            // swap the input strings to consume less memory
-            String tmp = s;
-            s = t;
-            t = tmp;
-            n = m;
-            m = t.length();
-        }
-
-        int p[] = new int[n+1]; //'previous' cost array, horizontally
-        int d[] = new int[n+1]; // cost array, horizontally
-        int _d[]; //placeholder to assist in swapping p and d
-
-        int i, j, cost;
-
-        char t_j; // jth character of t
-
-        for (i = 0; i<=n; i++) {
-            p[i] = i;
-        }
-
-        for (j = 1; j<=m; j++) {
-            t_j = t.charAt(j-1);
-            d[0] = j;
-
-            for (i=1; i<=n; i++) {
-                cost = s.charAt(i-1)==t_j ? 0 : 1;
-                // minimum of cell to the left+1, to the top+1, diagonally left and up +cost
-                d[i] = Math.min(Math.min(d[i-1]+1, p[i]+1),  p[i-1]+cost);
-            }
-
-            // copy current distance counts to 'previous row' distance counts
-            _d = p;
-            p = d;
-            d = _d;
-        }
-
-        // p has most recent cost count
-        return p[n];
-    }
 }
