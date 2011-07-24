@@ -1,6 +1,10 @@
+Moar
+==========
+
 More advanced give options.
 
-Usage:
+## Usage
+
     /m <#>
 	/moar <#>
 	/moar <blockname> <#>
