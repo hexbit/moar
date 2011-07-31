@@ -55,39 +55,63 @@ public class Moar extends JavaPlugin {
 		}
 		else {
 			sender.sendMessage("This command is only available to players!");
-			return false;
+			return true; //Return true so the usage text isn't sent
 		}
-
+		
 		if (commandLabel.equalsIgnoreCase("moar")) {
 			if (args.length == 0) {
 				return false;
 			}
 			else if (args.length == 1) {
 				try {
-					int amount = Integer.parseInt(args[0]);
-					moar(player, amount);
+					Integer.parseInt(args[0]);
+					return false;
 				}
 				catch (NumberFormatException e) {
-					player.sendMessage("Usage: /moar <amount>");
+					moar(player, args[0], 1);
+					return true;
 				}
 			}
 			else if (args.length == 2) {
 				//TODO: Make sure lookup() parses IDs or parse args[0] and use BlockType.fromID()
 				try {
 					int amount = Integer.parseInt(args[1]);
-					moar(player, args[0], amount);
+					String itemName = "";
+					
+					//Not really clean but the best way to do this
+					try {
+						Integer.parseInt(args[0]);
+						return false;
+					}
+					catch (NumberFormatException e){
+						itemName = args[0];
+					}
+					
+					moar(player, itemName, amount);
+					return true;
 				}
 				catch (NumberFormatException e) {
-					player.sendMessage("Usage: /moar <id> <amount>");
+					return false;
 				}
 			}
-			return true;
-		}
-		else if (commandLabel.equalsIgnoreCase("m")) {
-			moar(player);
-			return true;
 		}
 		
+		else if (commandLabel.equalsIgnoreCase("m")) {	
+			if (args.length == 0) {
+				moar(player);	
+				return true;
+			}
+			else if (args.length == 1) {
+				try {
+					int amount = Integer.parseInt(args[0]);
+					moar(player, amount);
+					return true;
+				}
+				catch (NumberFormatException e) {
+					return false;
+				}
+			}
+		}
 		return false;
 	}
 
@@ -110,16 +134,18 @@ public class Moar extends JavaPlugin {
 		if (player.getItemInHand().getType() != Material.AIR) {
 			ItemStack itemInHand = player.getItemInHand();
 			
-			//If amount is too large, set to maxStackSize instead
-			int amtToGive = Math.min(amount, itemInHand.getMaxStackSize());
-			itemInHand.setAmount(amtToGive);
-
+			//Top off current stack in hand
+			int stackDiff = itemInHand.getMaxStackSize() - itemInHand.getAmount();
+			int amtToGive = Math.min(amount, stackDiff);
+			itemInHand.setAmount(itemInHand.getAmount() + amtToGive);
+			
 			//Continue until full amount has been disbursed
 			amount -= amtToGive;
-			while (amtToGive < amount)
+			while (amount > 0)
 			{
-				amtToGive -= amount;
-				player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(itemInHand.getTypeId(), Math.min(amtToGive, itemInHand.getMaxStackSize())));
+				amtToGive = Math.min(itemInHand.getMaxStackSize(), amount);
+				player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(itemInHand.getTypeId(), amtToGive));
+				amount -= itemInHand.getMaxStackSize();
 			}
 		}
 	}
@@ -131,32 +157,37 @@ public class Moar extends JavaPlugin {
 	 * @param amount The number of items to give
 	 */
 	private void moar(Player player, String itemName, int amount) {
-		//TODO: Do not ignore the amount parameter
+		int maxStackSize;
 		ItemStack newItem = null;
 		BlockType block = BlockType.lookup(itemName);
-		if (block == null)
-		{
+		
+		if (block == null) {
 			ItemType item = ItemType.lookup(itemName);
-			if (item == null)
-			{
+			if (item == null) {
 				return;
 			}
-			else
-			{
+			else {
 				newItem = new ItemStack(item.getID());
-				newItem.setAmount(newItem.getType().getMaxStackSize());
+				maxStackSize = newItem.getType().getMaxStackSize();
 			}
 		}
-		else
-		{
+		else {
 			newItem = new ItemStack(block.getID());
-			newItem.setAmount(newItem.getType().getMaxStackSize());
+			maxStackSize = newItem.getType().getMaxStackSize();
 		}
 
 		//FIXME: Shouldn't use nulls in Java... but it works
-		if (newItem != null)
-		{
+		if (newItem != null) {
+			int amtToGive = Math.min(amount, maxStackSize);
+			newItem.setAmount(amtToGive);
 			player.getInventory().addItem(newItem);
+			
+			amount -= amtToGive;
+			while (amount > 0) {
+				amtToGive = Math.min(amount, maxStackSize);
+				player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(newItem.getTypeId(), amtToGive));
+				amount -= maxStackSize;
+			}
 		}
 	}
 }

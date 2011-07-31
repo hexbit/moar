@@ -1,14 +1,19 @@
 name: Moar
 main: com.hexbit.moar.Moar
-version: 0.1
+version: 0.2
 
 commands:
     moar:
-        description: Gives the player more of the currently held block
-        usage: /moar <amount>
-    moar:
         description: Gives the player more of the specified block
-        usage: /moar <id> <amount>
+        usage: |
+                /moar [item name] [amount] -If amount not specified defaults to 1
+                Example: /moar [stone] [53] -Gives the player 53
+                Example: /moar [stoneaxe] -Gives the player 1 stone axe
+                
     m:
         description: Tops off the currently held stack
-        usage: /m
+        usage: |
+                /m -Sets the current item in the players hand to a full stack
+                /m [amount] -Gives the player the amount specified of the item in the players hand
+                Example: /m 23 -Player now has 23 more of the item in their hand
+                

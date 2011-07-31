@@ -3,3 +3,4 @@ libs/
 .settings/
 .classpath
 .project
+localbuild.sh
